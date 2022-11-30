@@ -1,0 +1,35 @@
+version: '3.9'
+
+services:
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${DATABASE_NAME}
+      POSTGRES_PASSWORD: ${DATABASE_USER}
+      POSTGRES_DB: ${DATABASE_PASSWORD}
+    volumes:
+      - ../databd/:/var/lib/postgresql/data/
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DATABASE_USER}" ]
+      interval: 5s
+    env_file:
+      - .env
+
+  baseProject:
+    image: baseproject
+    build:
+      context: ../
+      dockerfile: ./baseProject/Dockerfile
+    restart: always
+    volumes:
+      - ../baseProject/:/app/
+      - ../media_data/:/app/media/
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"

@@ -1,0 +1,17 @@
+# Environments
+.env
+.venv
+env/
+venv/
+env.bak/
+venv.bak/
+
+*.pyc
+__pycache__/
+cache/
+
+bd_data/
+databd/
+media_data/
+
+.idea
